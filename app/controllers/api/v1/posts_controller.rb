@@ -1,4 +1,5 @@
 class Api::V1::PostsController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
   before_action :find_post, only: %i[show update destroy]
 
   def index
@@ -7,8 +8,12 @@ class Api::V1::PostsController < ApplicationController
     render json: @posts, status: :ok
   end
 
+  def show
+    render json: @post, status: :ok
+  end
+
   def create
-    @post = Post.new(post_params)
+    @post = current_user.posts.new(post_params)
 
     if @post.save
       render json: { message: 'SUCCESS', data: @post }, status: :created
