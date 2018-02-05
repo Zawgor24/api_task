@@ -1,6 +1,7 @@
 class Api::V1::PostsController < ApplicationController
-  before_action :authenticate_user!, except: %i[index]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   before_action :find_post, only: %i[show update destroy]
+  before_action :find_user, only: %(create)
 
   def index
     @posts = Post.all
@@ -13,7 +14,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(post_params.merge(user_id: current_user.id))
+    @post = @user.posts.new(post_params)
 
     if @post.save
       render json: { message: 'SUCCESS', data: @post }, status: :created
@@ -40,15 +41,19 @@ class Api::V1::PostsController < ApplicationController
 
   private
 
+  def record_not_found
+    render text: '404 Not Found', status: 404
+  end
+
+  def find_user
+    @user ||= User.find_by(authentication_token: params[:auth_token])
+  end
+
   def find_post
-    #if  Post.find(params[:id]).exist?
-      @post = Post.find(params[:id])
-    # else
-    #   render status: 404
-    # end
+    @post = Post.find(params[:id])
   end
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.permit(:title, :body)
   end
 end

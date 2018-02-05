@@ -6,20 +6,19 @@ git_source(:github) do |repo_name|
 end
 
 gem 'devise'
-gem 'devise_token_auth'
+gem 'devise-token_authenticatable'
 gem 'jwt'
 
+gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.7'
 gem 'rails', '~> 5.1.4'
 gem 'rspec-rails'
-gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'factory_bot_rails'
-  gem 'shoulda-matchers', '~> 3.1'
   gem 'database_cleaner'
+  gem 'factory_bot_rails'
   gem 'shoulda-matchers', '~> 3.1'
 end
 

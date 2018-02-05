@@ -1,48 +1,18 @@
-DeviseTokenAuth.setup do |config|
-  # By default the authorization headers will change after each request. The
-  # client is responsible for keeping track of the changing tokens. Change
-  # this to false to prevent the Authorization header from changing after
-  # each request.
-  # config.change_headers_on_each_request = true
+Devise::TokenAuthenticatable.setup do |config|
+  # enables the expiration of a token after a specified amount of time,
+  # requires an additional field on the model: `authentication_token_created_at`
+  # defaults to nil
+  config.token_expires_in = 1.day
 
-  # By default, users will need to re-authenticate after 2 weeks. This setting
-  # determines how long tokens will remain valid after they are issued.
-  # config.token_lifespan = 2.weeks
+  # set the authentication key name used by this module,
+  # defaults to :auth_token
+  config.token_authentication_key = :other_key_name
 
-  # Sets the max number of concurrent devices per user, which is 10 by default.
-  # After this limit is reached, the oldest tokens will be removed.
-  # config.max_number_of_devices = 10
+  # enable reset of the authentication token before the model is saved,
+  # defaults to false
+  config.should_reset_authentication_token = true
 
-  # Sometimes it's necessary to make several requests to the API at the same
-  # time. In this case, each request in the batch will need to share the same
-  # auth token. This setting determines how far apart the requests can be while
-  # still using the same auth token.
-  # config.batch_request_buffer_throttle = 5.seconds
-
-  # This route will be the prefix for all oauth2 redirect callbacks. For
-  # example, using the default '/omniauth', the github oauth2 provider will
-  # redirect successful authentications to '/omniauth/github/callback'
-  # config.omniauth_prefix = "/omniauth"
-
-  # By default sending current password is not needed for the password update.
-  # Uncomment to enforce current_password param to be checked before all
-  # attribute updates. Set it to :password if you want it to be checked only if
-  # password is updated.
-  # config.check_current_password_before_update = :attributes
-
-  # By default we will use callbacks for single omniauth.
-  # It depends on fields like email, provider and uid.
-  # config.default_callbacks = true
-
-  # Makes it possible to change the headers names
-  # config.headers_names = {:'access-token' => 'access-token',
-  #                        :'client' => 'client',
-  #                        :'expiry' => 'expiry',
-  #                        :'uid' => 'uid',
-  #                        :'token-type' => 'token-type' }
-
-  # By default, only Bearer Token authentication is implemented out of the box.
-  # If, however, you wish to integrate with legacy Devise authentication, you can
-  # do so by enabling this flag. NOTE: This feature is highly experimental!
-  # config.enable_standard_devise_support = false
+  # enables the setting of the authentication token - if not already - before the model is saved,
+  # defaults to false
+  config.should_ensure_authentication_token = true
 end
