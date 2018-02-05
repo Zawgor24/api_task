@@ -1,5 +1,5 @@
 class Api::V1::PostsController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!, except: %i[index]
   before_action :find_post, only: %i[show update destroy]
 
   def index
@@ -13,7 +13,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    @post = current_user.posts.new(post_params)
+    @post = Post.new(post_params.merge(user_id: current_user.id))
 
     if @post.save
       render json: { message: 'SUCCESS', data: @post }, status: :created
@@ -41,7 +41,11 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def find_post
-    @post = Post.find(params[:id])
+    #if  Post.find(params[:id]).exist?
+      @post = Post.find(params[:id])
+    # else
+    #   render status: 404
+    # end
   end
 
   def post_params
